@@ -1,3 +1,7 @@
 This is the swipe capture tool project.
-Read git tutorials
 
+
+Install githubs windows client
+
+
+select and drag link into github
