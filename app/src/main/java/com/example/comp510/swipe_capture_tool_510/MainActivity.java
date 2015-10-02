@@ -4,13 +4,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
+    TextView out;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         out= (TextView) findViewById(R.id.hello);
     }
 
     @Override
@@ -33,5 +37,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        int x = (int)event.getX();
+                int y = (int) event.getY();
+                String a = "X: "+x+" Y: "+y;
+                out.setText(a);
+
+        return true;
     }
 }
