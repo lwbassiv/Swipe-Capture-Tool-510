@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         out= (TextView) findViewById(R.id.hello);
+        out= (TextView) findViewById(R.id.hello);
     }
 
     @Override
@@ -40,11 +40,10 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        int x = (int)event.getX();
-                int y = (int) event.getY();
-                String a = "X: "+x+" Y: "+y;
-                out.setText(a);
-
+        Swipe swipe= new Swipe();
+        swipe.captureSwipe(event);
+        out.setText(swipe.toString());
         return true;
     }
+
 }
