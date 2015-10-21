@@ -9,8 +9,10 @@ import java.util.ArrayList;
  */
 public class Swipe {
     private ArrayList<Double> x;
-    private ArrayList<Double> y;
-    private ArrayList<ArrayList<Double>> loc;
+    private static ArrayList<Double> y;
+    private static ArrayList<ArrayList<Double>> loc;
+    private static String xString="" ;
+    private static String yString="";
     Swipe(){
         loc = new ArrayList<ArrayList<Double>>();
         x =new ArrayList<Double>();
@@ -25,13 +27,12 @@ public class Swipe {
     }
     @Override
     public String toString(){
-        String xString ="";
-        String yString="";
+
         for (double x: loc.get(0)){
-            xString= xString +x+"";
+            xString= xString +x+" ";
         }
-        for(double y: loc.get(0)){
-            yString= yString +y+ "";
+        for(double y: loc.get(1)){
+            yString= yString +y+ " ";
         }
         return "X: "+xString+"\n"+"Y:"+yString+"\n";
     }
