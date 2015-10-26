@@ -3,4 +3,6 @@
 
     <string name="hello_world">Hello world! Welcome to the gram</string>
     <string name="action_settings">Settings</string>
+    <string name="viewWeb">browser</string>
+    <string name="title_activity_web">Web</string>
 </resources>

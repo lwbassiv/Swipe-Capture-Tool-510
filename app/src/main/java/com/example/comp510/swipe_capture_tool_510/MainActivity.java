@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.web) {
+            WebView webview = new WebView(this);
+            setContentView(webview);
+            webview.loadUrl("www.msn.com");
             return true;
         }
 
