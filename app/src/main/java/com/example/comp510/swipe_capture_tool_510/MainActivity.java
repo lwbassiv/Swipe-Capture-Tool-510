@@ -1,5 +1,6 @@
 package com.example.comp510.swipe_capture_tool_510;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +9,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     TextView out;
@@ -49,5 +54,37 @@ public class MainActivity extends AppCompatActivity {
         out.setText(swipe.toString());
         return true;
     }
+    public boolean writeInternalFile () {
+
+        Context context = this.getBaseContext();
+        String filename = "test-test";
+        File file = new File(context.getFilesDir(), filename);
+        FileInputStream fileI;
+        try {
+            int length = (int)file.length();
+            byte[] bytes = new byte[length];
+            fileI = new FileInputStream(file);
+            fileI.read(bytes);
+            fileI.close();
+            out.append(new String(bytes));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        FileOutputStream fileIO;
+        try {
+            fileIO = new FileOutputStream(file);
+            String writeFile = String.valueOf(Math.random());
+            fileIO.write(writeFile.getBytes());
+            fileIO.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        out.append(file.getAbsolutePath());
+        return true;
+    }
+
 
 }
