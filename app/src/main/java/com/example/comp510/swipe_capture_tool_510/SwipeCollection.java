@@ -37,11 +37,15 @@ public class SwipeCollection {
 
         try {
             FileOutputStream fileIO = new FileOutputStream(file);
-            String output = "Swipe Capture " + date;
-
-            /*for (Swipe s: swipeList) {
-
-            }*/
+            String output = "Swipe Capture " + date+'\n';
+            for (Swipe s: swipeList) {
+                ArrayList<Double> x = s.getLoc().get(0);
+                ArrayList<Double> y = s.getLoc().get(1);
+                for (int i=0; i<x.size(); i++) {
+                    output += x.get(i)+","+y.get(i)+" ";
+                }
+                output += '\n';
+            }
             //for loop to save each swipe class
 
             fileIO.write(output.getBytes());

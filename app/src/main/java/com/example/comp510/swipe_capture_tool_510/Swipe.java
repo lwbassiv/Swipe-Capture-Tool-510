@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Swipe {
     private ArrayList<Double> x;
-    private static ArrayList<Double> y;
-    private static ArrayList<ArrayList<Double>> loc;
+    private ArrayList<Double> y;
+    private ArrayList<ArrayList<Double>> loc;
     private static String xString="" ;
     private static String yString="";
     Swipe(){
@@ -21,12 +21,12 @@ public class Swipe {
         loc.add(x);
     }
 
-    public static ArrayList<ArrayList<Double>> getLoc() {
+    public ArrayList<ArrayList<Double>> getLoc() {
         return loc;
     }
 
-    public static void setLoc(ArrayList<ArrayList<Double>> loc) {
-        Swipe.loc = loc;
+    public void setLoc(ArrayList<ArrayList<Double>> loc) {
+        this.loc = loc;
     }
 
     public void captureSwipe(MotionEvent event){
