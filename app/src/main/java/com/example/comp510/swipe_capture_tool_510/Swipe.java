@@ -20,11 +20,21 @@ public class Swipe {
         loc.add(y);
         loc.add(x);
     }
+
+    public static ArrayList<ArrayList<Double>> getLoc() {
+        return loc;
+    }
+
+    public static void setLoc(ArrayList<ArrayList<Double>> loc) {
+        Swipe.loc = loc;
+    }
+
     public void captureSwipe(MotionEvent event){
         loc.get(0).add((double) event.getX());
         loc.get(1).add((double) event.getY());
 
     }
+
     @Override
     public String toString(){
 
