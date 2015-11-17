@@ -2,6 +2,8 @@ package com.example.comp510.swipe_capture_tool_510;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         out= (TextView) findViewById(R.id.hello);
-        startService(new Intent(this,SwipeCapture.class));
+        startService(new Intent(this, SwipeCapture.class));
     }
 
     @Override
@@ -49,14 +51,23 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    /* @Override
-    *public boolean onTouchEvent(MotionEvent event){
-         Swipe swipe= new Swipe();
-         swipe.captureSwipe(event);
-         out.setText(swipe.toString());
+    /*Needs Fixing events don't work yet*/
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+         //Swipe swipe= new Swipe();
+         //swipe.captureSwipe(event);
+         //out.setText(swipe.toString());
+        Handler handler = new Handler(getMainLooper()){
+            @Override
+            public void dispatchMessage(Message msg) {
+                super.dispatchMessage(msg);
+            }
 
-         return true;
-     }*/
+            //Message m = Message.obtain(this),0,event);
+
+        };
+        return true;
+     }
     public boolean writeInternalFile () {
 
         Context context = this.getBaseContext();
