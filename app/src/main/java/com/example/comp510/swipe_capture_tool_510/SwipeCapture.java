@@ -15,30 +15,25 @@ import android.widget.Toast;
 
 import java.util.logging.Logger;
 
-public class SwipeCapture extends Service implements Runnable {
+public class SwipeCapture extends Service {
     private MotionEvent touch;
     private static final String TAG = "SwipeCapture";
-    private static Handler handler;
-    MotionEvent ev;
+    //private static Handler handler;
+    private Swipe temp = new Swipe();
 
-    // SwipeCollection swipeCollection;
+    ;
+    //MotionEvent ev;
+    private SwipeCollection swipeCollection = new SwipeCollection(this);
     public SwipeCapture() {
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Thread t = new Thread(this);
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message inputMessage) {
-                // Gets the image task from the incoming Message object.
-                ev = (MotionEvent) inputMessage.obj;
-                super.handleMessage(inputMessage);
-            }
-        };
-        t.start();
-        Log.i(TAG, "******************Started********************");
+        touch = intent.getParcelableExtra("MotionEvent");
+        //Log.i(TAG, "******************Started********************");
+        if (touch != null)
+            captureSwipes(touch);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -49,34 +44,29 @@ public class SwipeCapture extends Service implements Runnable {
         return null;
     }
 
-    @Override
-    public void run() {
 
-        while (true) {
+    public void captureSwipes(MotionEvent event) {
 
-            touch = ev;
-            Swipe temp=null;
-            switch (touch.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (temp != null) {
-                        temp.captureSwipe(touch);
-                        Context context = getApplicationContext();
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast.makeText(context, "lifted finger", duration).show();
-                        Log.i(TAG, "Lifted Finger");
 
-                    }
-                    temp = new Swipe();
-                    temp.captureSwipe(touch);
-                    break;
-                default:
-                    temp.captureSwipe(touch);
-                    Log.i(TAG, "other");
-                    break;
+        touch = event;
 
-            }
+        switch (touch.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                swipeCollection.add(temp);
+                temp = new Swipe();
+                temp.captureSwipe(touch);
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(context, "New Swipe", duration).show();
+                Log.i(TAG, "New swipe");
+                temp.captureSwipe(touch);
+                break;
+            default:
 
-            ;
+                temp.captureSwipe(touch);
+                Log.i(TAG, "other");
+                break;
+
 
         }
     }

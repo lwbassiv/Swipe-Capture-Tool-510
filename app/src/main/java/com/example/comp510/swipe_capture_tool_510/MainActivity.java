@@ -1,5 +1,6 @@
 package com.example.comp510.swipe_capture_tool_510;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -19,12 +20,20 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     TextView out;
+    SwipeCapture swipe;
+    Intent i;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         out= (TextView) findViewById(R.id.hello);
-        startService(new Intent(this, SwipeCapture.class));
+        swipe= new SwipeCapture();
+        Service s = new SwipeCapture();
+        i= new Intent(this, SwipeCapture.class);
+        //i.putExtra("MotionEvent",event);
+        startService(i);
+       // startService();
     }
 
     @Override
@@ -54,18 +63,12 @@ public class MainActivity extends AppCompatActivity {
     /*Needs Fixing events don't work yet*/
     @Override
     public boolean onTouchEvent(MotionEvent event){
-         //Swipe swipe= new Swipe();
+        // SwipeCapture swipe= new SwipeCapture();
          //swipe.captureSwipe(event);
          //out.setText(swipe.toString());
-        Handler handler = new Handler(getMainLooper()){
-            @Override
-            public void dispatchMessage(Message msg) {
-                super.dispatchMessage(msg);
-            }
-
-            //Message m = Message.obtain(this),0,event);
-
-        };
+        i= new Intent(this, SwipeCapture.class);
+        i.putExtra("MotionEvent",event);
+        startService(i);
         return true;
      }
     public boolean writeInternalFile () {
