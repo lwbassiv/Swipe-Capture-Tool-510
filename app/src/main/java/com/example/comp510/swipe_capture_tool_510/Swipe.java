@@ -5,7 +5,7 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 
 /**
- * Created by Rider X2 on 10/21/2015.
+ * Created by Lowell on 10/21/2015.
  */
 public class Swipe {
     private ArrayList<Double> x;
