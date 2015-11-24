@@ -1,5 +1,6 @@
 package com.example.comp510.swipe_capture_tool_510;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,20 +8,30 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
-    TextView out;
-    SwipeCapture swipe;
+    private TextView out;
+    private Button webBtn;
+    private SwipeCapture swipe;
+    private ViewGroup contentView;
+    //private Layout l;
     Intent i;
 
     @Override
@@ -28,14 +39,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         out= (TextView) findViewById(R.id.hello);
+        webBtn = (Button) findViewById((R.id.webButton));
+        webBtn.setOnClickListener(new WebButtonListener());
         swipe= new SwipeCapture();
-        Service s = new SwipeCapture();
-        i= new Intent(this, SwipeCapture.class);
-        //i.putExtra("MotionEvent",event);
-        startService(i);
-       // startService();
-    }
+        contentView= (ViewGroup) findViewById(R.id.my_relative_layout_id);
 
+        i= new Intent(this, SwipeCapture.class);
+        startService(i);
+    }
+    //Spy on motion events
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+        //Spy on motion events
+            MotionEvent e =event;
+            i= new Intent(this, SwipeCapture.class);
+            i.putExtra("MotionEvent", e);
+            startService(i);
+        super.dispatchTouchEvent(event);
+        return false;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -60,17 +82,18 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    /*Needs Fixing events don't work yet*/
-    @Override
+
+    /*@Override
     public boolean onTouchEvent(MotionEvent event){
         // SwipeCapture swipe= new SwipeCapture();
          //swipe.captureSwipe(event);
          //out.setText(swipe.toString());
+        buttonTouch(event);
         i= new Intent(this, SwipeCapture.class);
         i.putExtra("MotionEvent",event);
         startService(i);
         return true;
-     }
+     }*/
     public boolean writeInternalFile () {
 
         Context context = this.getBaseContext();
@@ -102,6 +125,54 @@ public class MainActivity extends AppCompatActivity {
         out.append(file.getAbsolutePath());
         return true;
     }
+    public void buttonTouch(MotionEvent event){
+        WebView webview = new WebView(this);
+        getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
+        webview.getSettings().setJavaScriptEnabled(true);
+
+        final Activity activity = this;
+        webview.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                // Activities and WebViews measure progress with different scales.
+                // The progress meter will automatically disappear when we reach 100%
+                activity.setProgress(progress * 1000);
+            }
+        });
+        webview.setWebViewClient(new WebViewClient() {
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+    }
 
 
+    private class WebButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            WebView webview = new WebView(MainActivity.this);
+            //MainActivity.this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
+            webview.getSettings().setJavaScriptEnabled(true);
+
+            final Activity activity = MainActivity.this;
+            webview.setWebChromeClient(new WebChromeClient() {
+                public void onProgressChanged(WebView view, int progress) {
+                    // Activities and WebViews measure progress with different scales.
+                    // The progress meter will automatically disappear when we reach 100%
+                    activity.setProgress(progress * 1000);
+                }
+            });
+            webview.setWebViewClient(new WebViewClient() {
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                    Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+            setContentView(webview);
+        }
+    }
 }
