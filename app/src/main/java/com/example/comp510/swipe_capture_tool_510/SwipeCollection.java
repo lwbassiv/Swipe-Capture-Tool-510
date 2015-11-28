@@ -1,6 +1,7 @@
 package com.example.comp510.swipe_capture_tool_510;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,6 +30,30 @@ public class SwipeCollection {
         swipeList.add(s);
     }
 
+    public Swipe getLast() {
+        return swipeList.get(swipeList.size()-1);
+    }
+
+
+    public String toText() {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+        String date = df.format(new Date());
+        String output = "Swipe Capture " + date+'\n';
+        //System.out.println("swipelist="+swipeList.size());
+        for (Swipe s: swipeList) {
+            ArrayList<Double> x = s.getLoc().get(0);
+            ArrayList<Double> y = s.getLoc().get(1);
+
+            int size = x.size();
+            for (int i = 0; i < size; i++) {
+                output += "(" + x.get(i) + "," + y.get(i) + ") ";
+            }
+            output += "~" + '\n';
+        }
+        System.out.println(output);
+        return output;
+    }
+
     public boolean exportToFile() {
         //context = this.getBaseContext();
         String date = new Date().toString();
@@ -37,16 +62,7 @@ public class SwipeCollection {
 
         try {
             FileOutputStream fileIO = new FileOutputStream(file);
-            String output = "Swipe Capture " + date+'\n';
-            for (Swipe s: swipeList) {
-                ArrayList<Double> x = s.getLoc().get(0);
-                ArrayList<Double> y = s.getLoc().get(1);
-                for (int i=0; i<x.size(); i++) {
-                    output += x.get(i)+","+y.get(i)+" ";
-                }
-                output += '\n';
-            }
-            //for loop to save each swipe class
+            String output = this.toText();
 
             fileIO.write(output.getBytes());
             fileIO.close();
