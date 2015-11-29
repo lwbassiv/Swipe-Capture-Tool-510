@@ -11,32 +11,50 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import android.app.IntentService;
 
 
 import java.util.logging.Logger;
 
-public class SwipeCapture extends Service {
+public class SwipeCapture extends IntentService {
     private MotionEvent touch;
     private static final String TAG = "SwipeCapture";
     //private static Handler handler;
-    private Swipe temp = new Swipe();
+    private Swipe temp; // = new Swipe();
+    private Context context;
+    public static SwipeCollection swipeCollection; // = new SwipeCollection(this);
 
-    ;
-    //MotionEvent ev;
-    private SwipeCollection swipeCollection = new SwipeCollection(this);
     public SwipeCapture() {
-
+        super("SwipeCapture");
+        //context = getApplicationContext();
+        //swipeCollection = new SwipeCollection(context);
     }
 
+
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onHandleIntent(Intent intent) {
+        context = getApplicationContext();
+        if (swipeCollection == null) {
+            swipeCollection = new SwipeCollection(context);
+        }
         touch = intent.getParcelableExtra("MotionEvent");
+        //Log.i(TAG, "******************Started********************");
+        if (touch != null)
+            synchronized (this) {
+                captureSwipes(touch);
+            }
+        //return super.onStartCommand(intent, flags, startId);
+    }
+
+    /*@Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        context = getApplicationContext();
+        touch = intent.getParcelableExtra("MotionEvent"); //dunno what this function does
         //Log.i(TAG, "******************Started********************");
         if (touch != null)
             captureSwipes(touch);
         return super.onStartCommand(intent, flags, startId);
-    }
-
+    }*/
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,30 +62,32 @@ public class SwipeCapture extends Service {
         return null;
     }
 
-
     public void captureSwipes(MotionEvent event) {
-
-
         touch = event;
 
         switch (touch.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                swipeCollection.add(temp);
-                temp = new Swipe();
-                temp.captureSwipe(touch);
-                Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(context, "New Swipe", duration).show();
+            case MotionEvent.ACTION_DOWN: //Capture on DOWN PRESS
+                temp = new Swipe(); //create new swipe on down press
+                swipeCollection.add(temp); //add new swipe (needed to move this)
+                temp.captureSwipe(touch); //capture swipe info
+                //Context context = getApplicationContext(); //made as a private variable
+                //int duration = Toast.LENGTH_SHORT; //doesnt need to be its own variable
+
+                //cant send toast from intentservice, sorry
+                //Toast.makeText(getApplicationContext(), "New Swipe", Toast.LENGTH_SHORT).show();//feedback
                 Log.i(TAG, "New swipe");
-                temp.captureSwipe(touch);
+                //temp.captureSwipe(touch); //why do u capture it twice here
                 break;
             default:
-
-                temp.captureSwipe(touch);
-                Log.i(TAG, "other");
+                //Capture ACTION_MOVE and ACTION_UP
+                swipeCollection.getLast().captureSwipe(touch);//capture location data
+                //class is not persistent though each swipe
+                //Log.i(TAG, "other"); //feedback
+                /*if(touch.getAction() == MotionEvent.ACTION_UP)
+                    Log.i(TAG, "endSwipe");
+                else
+                    Log.i(TAG, "contSwipe");*/
                 break;
-
-
         }
     }
 }

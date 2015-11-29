@@ -5,4 +5,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/web" android:title="@string/viewWeb"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/file" android:title="File Contents"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

@@ -2,6 +2,7 @@ package com.example.comp510.swipe_capture_tool_510;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -37,24 +38,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        out= (TextView) findViewById(R.id.hello);
+
+        out = (TextView) findViewById(R.id.hello);
+        contentView = (ViewGroup) findViewById(R.id.my_relative_layout_id);
+
         webBtn = (Button) findViewById((R.id.webButton));
         webBtn.setOnClickListener(new WebButtonListener());
-        swipe= new SwipeCapture();
-        contentView= (ViewGroup) findViewById(R.id.my_relative_layout_id);
 
-        i= new Intent(this, SwipeCapture.class);
+        swipe = new SwipeCapture();
+        i = new Intent(this, SwipeCapture.class);
         startService(i);
+
     }
     //Spy on motion events
     @Override
     public boolean dispatchTouchEvent(MotionEvent event){
         //Spy on motion events
-            MotionEvent e =event;
-            i= new Intent(this, SwipeCapture.class);
-            i.putExtra("MotionEvent", e);
-            startService(i);
+        i = new Intent(this, SwipeCapture.class);
+        i.putExtra("MotionEvent", event);
+        startService(i);
         super.dispatchTouchEvent(event);
         return false;
     }
@@ -78,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
             setContentView(webview);
             webview.loadUrl("www.msn.com");
             return true;
+        } else if (id == R.id.file) {
+            out.setText("");
+            out.append(swipe.swipeCollection.toText());
         }
 
         return super.onOptionsItemSelected(item);
@@ -94,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         startService(i);
         return true;
      }*/
-    public boolean writeInternalFile () {
+    /*public boolean writeInternalFile () {
 
         Context context = this.getBaseContext();
         String filename = "test-test";
@@ -124,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
         out.append(file.getAbsolutePath());
         return true;
-    }
+    }*/
     public void buttonTouch(MotionEvent event){
         WebView webview = new WebView(this);
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
@@ -145,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+        //webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+        webview.loadUrl("http://www.google.com");
     }
 
 
@@ -154,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             WebView webview = new WebView(MainActivity.this);
             //MainActivity.this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
+            
 
             webview.getSettings().setJavaScriptEnabled(true);
 
@@ -171,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+            //webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+            webview.loadUrl("http://www.google.com");
             setContentView(webview);
         }
     }
