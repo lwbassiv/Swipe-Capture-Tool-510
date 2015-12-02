@@ -156,6 +156,32 @@ public class MainActivity extends AppCompatActivity {
         webview.loadUrl("http://www.google.com");
     }
 
+    public void startGame(View view) {
+        WebView webview = new WebView(MainActivity.this);
+        //MainActivity.this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
+
+        webview.getSettings().setJavaScriptEnabled(true);
+
+        final Activity activity = MainActivity.this;
+        webview.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                // Activities and WebViews measure progress with different scales.
+                // The progress meter will automatically disappear when we reach 100%
+                activity.setProgress(progress * 1000);
+            }
+        });
+        webview.setWebViewClient(new WebViewClient() {
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
+        webview.loadUrl("https://gabrielecirulli.github.io/2048/");
+        setContentView(webview);
+    }
+
 
     private class WebButtonListener implements View.OnClickListener {
         @Override
