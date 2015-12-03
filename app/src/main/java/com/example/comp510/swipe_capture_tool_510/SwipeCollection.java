@@ -1,12 +1,15 @@
 package com.example.comp510.swipe_capture_tool_510;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +59,7 @@ public class SwipeCollection {
 
     public boolean exportToFile() {
         //context = this.getBaseContext();
+        /*Redundant
         String date = new Date().toString();
         filename += date+".txt";
         File file = new File(context.getFilesDir(), filename);
@@ -69,10 +73,23 @@ public class SwipeCollection {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }*/
+        try{
+            File fileExt = new File(context.getExternalFilesDir(null), filename);
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                FileOutputStream fileIOExt = new FileOutputStream(fileExt);
+                String output = this.toText();
+
+                fileIOExt.write(output.getBytes());
+                fileIOExt.close();
+            }
+        }catch (IOException e){
+            Toast.makeText(context, "Failed to save to external", Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         //new BufferedWriter(new FileWriter(filename))
-
+        Toast.makeText(context, "Saved to "+file.getAbsolutePath(), Toast.LENGTH_LONG).show();
         System.out.print(file.getAbsolutePath());
         return true;
     }
