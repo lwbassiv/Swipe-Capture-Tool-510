@@ -96,23 +96,24 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.file) {
             out.setText("");
             out.append(swipe.swipeCollection.toText());
+            swipe.swipeCollection.exportToFile();
         }else if (id == R.id.license){
             try {
                 InputStream input = getAssets().open("Game2048/LICENSE.txt");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input,"UTF-8"));
                 StringBuilder buf=new StringBuilder();
 
-                String licenseStr;
+                String licenseStr ;
 
-                while ((licenseStr=reader.readLine()) != null) {
-                    licenseStr=reader.readLine();
-                    buf.append(licenseStr);
+                while ((licenseStr = reader.readLine()) != null) {
+                    //licenseStr=reader.readLine();
+                    buf.append(licenseStr+"\n");
                 }
 
-                reader.close();
+
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle("2048 License");
-                alertDialog.setMessage(licenseStr);
+                alertDialog.setMessage(buf.toString());
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
+                reader.close();
             }catch (Exception e){
                 Toast.makeText(this, "Fail "+e.toString() , Toast.LENGTH_SHORT).show();
             }
