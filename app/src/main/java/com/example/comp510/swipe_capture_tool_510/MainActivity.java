@@ -1,10 +1,13 @@
 package com.example.comp510.swipe_capture_tool_510;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -156,13 +159,17 @@ public class MainActivity extends AppCompatActivity {
         webview.loadUrl("http://www.google.com");
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void startGame(View view) {
         WebView webview = new WebView(MainActivity.this);
         //MainActivity.this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
 
 
         webview.getSettings().setJavaScriptEnabled(true);
-
+        webview.getSettings().setAllowFileAccessFromFileURLs(true);
+        webview.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        webview.getSettings().setDomStorageEnabled(true);
+        webview.getSettings().setDatabaseEnabled(true);
         final Activity activity = MainActivity.this;
         webview.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
@@ -178,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
-        webview.loadUrl("https://gabrielecirulli.github.io/2048/");
+        //Uri uri = Uri.parse("file:///assets/2048-Master/index.html");
+                webview.loadUrl("file:///android_asset/Game2048/index.html");
         setContentView(webview);
     }
 
