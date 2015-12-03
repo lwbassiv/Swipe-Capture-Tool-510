@@ -2,10 +2,13 @@ package com.example.comp510.swipe_capture_tool_510;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -26,9 +29,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 public class MainActivity extends AppCompatActivity {
     private TextView out;
@@ -88,6 +96,33 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.file) {
             out.setText("");
             out.append(swipe.swipeCollection.toText());
+        }else if (id == R.id.license){
+            try {
+                InputStream input = getAssets().open("Game2048/LICENSE.txt");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                StringBuilder buf=new StringBuilder();
+
+                String licenseStr;
+
+                while ((licenseStr=reader.readLine()) != null) {
+                    licenseStr=reader.readLine();
+                    buf.append(licenseStr);
+                }
+
+                reader.close();
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("2048 License");
+                alertDialog.setMessage(licenseStr);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }catch (Exception e){
+                Toast.makeText(this, "Fail "+e.toString() , Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
