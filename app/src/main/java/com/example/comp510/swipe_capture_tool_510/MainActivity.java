@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private Button webBtn;
     private SwipeCapture swipe;
     private ViewGroup contentView;
+    private boolean inMainMenuView = true;
     //private Layout l;
     Intent i;
 
@@ -80,6 +81,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void onBackPressed() {
+        if (!inMainMenuView) {
+            setContentView(contentView);
+            inMainMenuView = true;
+        }
+        else {
+            swipe.swipeCollection.exportToFile();
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -88,15 +100,16 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.web) {
-            WebView webview = new WebView(this);
+        if (id == R.id.save) { //This is now save file
+            /*WebView webview = new WebView(this);
             setContentView(webview);
-            webview.loadUrl("www.msn.com");
+            webview.loadUrl("www.msn.com");*/
+
+            swipe.swipeCollection.exportToFile();
             return true;
         } else if (id == R.id.file) {
             out.setText("");
             out.append(swipe.swipeCollection.toText());
-            swipe.swipeCollection.exportToFile();
         }else if (id == R.id.license){
             try {
                 InputStream input = getAssets().open("Game2048/LICENSE.txt");
@@ -225,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         //Uri uri = Uri.parse("file:///assets/2048-Master/index.html");
                 webview.loadUrl("file:///android_asset/Game2048/index.html");
         setContentView(webview);
+        inMainMenuView = false;
     }
 
 
@@ -254,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
             //webview.loadUrl("http://help.websiteos.com/websiteos/example_of_a_simple_html_page.htm");
             webview.loadUrl("http://www.google.com");
             setContentView(webview);
+            inMainMenuView = false;
         }
     }
 }

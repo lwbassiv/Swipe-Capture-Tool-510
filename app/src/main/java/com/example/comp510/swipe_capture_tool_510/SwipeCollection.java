@@ -22,6 +22,8 @@ public class SwipeCollection {
     private File file;
     private String filename = "Swipe File-";
     private Context context;
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+    private DateFormat tf = DateFormat.getTimeInstance(DateFormat.LONG);
 
     private List<Swipe> swipeList = new ArrayList<Swipe>();
 
@@ -39,9 +41,9 @@ public class SwipeCollection {
 
 
     public String toText() {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
         String date = df.format(new Date());
-        String output = "Swipe Capture " + date+'\n';
+        date +=" " + tf.format(new Date());
+        String output = '\n'+"Swipe Capture " + date+'\n';
         //System.out.println("swipelist="+swipeList.size());
         for (Swipe s: swipeList) {
             ArrayList<Double> x = s.getLoc().get(0);
@@ -53,7 +55,7 @@ public class SwipeCollection {
             }
             output += "~" + '\n';
         }
-        System.out.println(output);
+        //System.out.println(output); //speeds up file save slightly
         return output;
     }
 
@@ -74,10 +76,11 @@ public class SwipeCollection {
             e.printStackTrace();
             return false;
         }*/
-        try{
-            File fileExt = new File(context.getExternalFilesDir(null), filename);
+        try {
+            File fileExt = new File(context.getExternalFilesDir(null), filename + df.format(new Date())+".txt");
+            file = fileExt;
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                FileOutputStream fileIOExt = new FileOutputStream(fileExt);
+                FileOutputStream fileIOExt = new FileOutputStream(fileExt, true);
                 String output = this.toText();
 
                 fileIOExt.write(output.getBytes());
@@ -89,6 +92,7 @@ public class SwipeCollection {
         }
 
         //new BufferedWriter(new FileWriter(filename))
+
         Toast.makeText(context, "Saved to "+file.getAbsolutePath(), Toast.LENGTH_LONG).show();
         System.out.print(file.getAbsolutePath());
         return true;
